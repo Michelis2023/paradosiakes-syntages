@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Παραδοσιακές Ελληνικές Συνταγές – Μιχαήλ Σ. Μιχαλακόπουλος</title>
+  <meta name="description" content="Συλλογή παραδοσιακών ελληνικών συνταγών με βήμα-βήμα οδηγίες. Ανακαλύψτε γεύσεις της ελληνικής κουζίνας.">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    nav {
+      background: white;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    nav button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+
+    nav button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+    }
+
+    nav button.active {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .recipe-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .recipe-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+    }
+
+    .recipe-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .recipe-card-body {
+      padding: 1.5rem;
+    }
+
+    .recipe-card h3 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 800px;
+      margin: 2rem auto;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .modal-header img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+      background: rgba(0,0,0,0.3);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+
+    .close:hover {
+      background: rgba(0,0,0,0.5);
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .modal-section {
+      margin-bottom: 2rem;
+    }
+
+    .modal-section h3 {
+      color: #667eea;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 0.5rem;
+    }
+
+    .ingredients-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .ingredients-list li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .ingredients-list li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #667eea;
+      font-weight: bold;
+    }
+
+    .steps {
+      white-space: pre-line;
+      line-height: 1.8;
+    }
+
+    footer {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 3rem;
+    }
+
+    .contact-form {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 2rem auto;
+    }
+
+    .contact-form h2 {
+      color: #667eea;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    .contact-form button {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .contact-form button:hover {
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .recipe-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍽️ Παραδοσιακές Ελληνικές Συνταγές</h1>
+    <p>Μιχαήλ Σωτηρίου Μιχαλακόπουλος</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><button onclick="filterRecipes('all')" class="active">Όλες οι Συνταγές</button></li>
+      <li><button onclick="filterRecipes('main')">Κυρίως Πιάτα</button></li>
+      <li><button onclick="filterRecipes('salad')">Σαλάτες & Ορεκτικά</button></li>
+      <li><button onclick="filterRecipes('dessert')">Παραδοσιακά Γλυκά</button></li>
+      <li><button onclick="filterRecipes('holiday')">🎁 Εορταστικά</button></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div class="contact-form">
+      <h2>📬 Επικοινωνήστε με τον Μιχαήλ</h2>
+      <p style="text-align: center; margin-bottom: 1rem;">Έχετε κάποια δική σας παραδοσιακή συνταγή; Στείλτε την για να τη μοιραστούμε!</p>
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <input type="text" name="name" placeholder="Το όνομά σας" required>
+        <input type="email" name="email" placeholder="Email σας" required>
+        <textarea name="message" rows="5" placeholder="Η συνταγή σας..." required></textarea>
+        <button type="submit">Αποστολή</button>
+      </form>
+    </div>
+
+    <div class="recipe-grid" id="recipeGrid"></div>
+  </div>
+
+  <div class="modal" id="recipeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImg" src="" alt="">
+        <h2 id="modalTitle"></h2>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <h3>🛒 Υλικά</h3>
+          <ul class="ingredients-list" id="modalIngredients"></ul>
+        </div>
+        <div class="modal-section">
+          <h3>👩‍🍳 Εκτέλεση συνταγής</h3>
+          <div class="steps" id="modalSteps"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Μιχαήλ Σωτηρίου Μιχαλακόπουλος | Παραδοσιακές Ελληνικές Συνταγές</p>
+  </footer>
+
+  <script>
+    const recipes = [
+      {
+        title: "Μουσακάς",
+        cat: "main",
+        img: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500",
+        ing: [
+          "1 κιλό μελιτζάνες",
+          "500 γρ. πατάτες",
+          "500 γρ. κιμάς",
+          "1 κρεμμύδι",
+          "2 ντομάτες",
+          "1 λίτρο γάλα",
+          "100 γρ. βούτυρο",
+          "100 γρ. αλεύρι",
+          "Αλάτι, πιπέρι, κανέλα"
+        ],
+        steps: `ΠΡΟΕΤΟΙΜΑΣΙΑ:\n1. Κόβεις τις μελιτζάνες σε ροδέλες πάχους 1 εκ.\n2. Τις αλατίζεις και τις αφήνεις 30 λεπτά να πικράνουν.\n3. Τις ξεπλένεις και τις στεγνώνεις.\n4. Τις τηγανίζεις σε ελαιόλαδο μέχρι να ροδίσουν.\n\nΚΙΜΑΣ:\n5. Σοτάρεις το κρεμμύδι ψιλοκομμένο.\n6. Προσθέτεις τον κιμά και τον ροδίζεις.\n7. Ρίχνεις τις ντομάτες τριμμένες.\n8. Προσθέτεις αλάτι, πιπέρι, κανέλα.\n9. Αφήνεις να σιγοβράσει 20 λεπτά.\n\nΜΠΕΣΑΜΕΛ:\n10. Λιώνεις το βούτυρο και προσθέτεις το αλεύρι.\n11. Ανακατεύεις συνέχεια για 2 λεπτά.\n12. Προσθέτεις σιγά-σιγά το ζεστό γάλα.\n13. Συνεχίζεις να ανακατεύεις μέχρι να πήξει.\n\nΣΥΝΑΡΜΟΛΟΓΗΣΗ:\n14. Στρώνεις πατάτες τηγανιτές σε ταψί.\n15. Προσθέτεις τις μελιτζάνες από πάνω.\n16. Απλώνεις τον κιμά.\n17. Καλύπτεις με τη μπεσαμέλ.\n18. Ψήνεις 180°C για 45 λεπτά."`
+      },
+      {
+        title: "Παστίτσιο",
+        cat: "main",
+        img: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=500",
+        ing: [
+          "500 γρ. παστίτσιο Νο2",
+          "500 γρ. κιμάς",
+          "1 κρεμμύδι",
+          "2 ντομάτες",
+          "1 λίτρο γάλα",
+          "100 γρ. βούτυρο",
+          "100 γρ. αλεύρι",
+          "2 αυγά",
+          "100 γρ. κεφαλοτύρι"
+        ],
+        steps: `ΚΙΜΑΣ:\n1. Σοτάρεις το κρεμμύδι.\n2. Προσθέτεις κιμά και ροδίζεις.\n3. Ρίχνεις ντομάτες, αλάτι, πιπέρι.\n4. Βράζεις 20 λεπτά.\n\nΜΑΚΑΡΟΝΙΑ:\n5. Βράζεις το παστίτσιο al dente.\n6. Στραγγίζεις και προσθέτεις βούτυρο.\n7. Ανακατεύεις με τα αυγά χτυπημένα.\n\nΜΠΕΣΑΜΕΛ:\n8. Λιώνεις βούτυρο, προσθέτεις αλεύρι.\n9. Ρίχνεις το γάλα σιγά-σιγά.\n10. Ανακατεύεις μέχρι να πήξει.\n\nΣΥΝΑΡΜΟΛΟΓΗΣΗ:\n11. Στρώνεις τη μισή ποσότητα μακαρονιών.\n12. Απλώνεις τον κιμά.\n13. Καλύπτεις με τα υπόλοιπα μακαρόνια.\n14. Ρίχνεις μπεσαμέλ και τυρί.\n15. Ψήνεις 180°C 45 λεπτά."`
+      },
+
+      // ΣΑΛΑΤΕΣ & ΟΡΕΚΤΙΚΑ
+      {
+        title: "Ντολμαδάκια Γιαλαντζί",
+        cat: "salad",
+        img: "https://images.unsplash.com/photo-1625938145312-446e2a0e8d21?w=500",
+        ing: [
+          "1 βάζο φύλλα αμπέλου (ή φρέσκα)",
+          "2 κούπες ρύζι",
+          "3 κρεμμύδια",
+          "1 κεσέδι μαϊντανό",
+          "1 κεσέδι άνηθο",
+          "200 ml ελαιόλαδο",
+          "Χυμός 2 λεμονιών",
+          "Αλάτι, πιπέρι"
+        ],
+        steps: `ΠΡΟΕΤΟΙΜΑΣΙΑ ΦΥΛΛΩΝ:\n1. Αν χρησιμοποιείς φύλλα από βάζο, ξεπλένεις καλά για να φύγει το αλάτι.\n2. Αν χρησιμοποιείς φρέσκα, τα βράζεις 2-3 λεπτά σε αλατισμένο νερό.\n\nΓΕΜΙΣΗ:\n3. Ψιλοκόβεις τα κρεμμύδια.\n4. Σοτάρεις σε ελαιόλαδο μέχρι να μαλακώσουν.\n5. Προσθέτεις το ρύζι και το σοτάρεις 2-3 λεπτά.\n6. Ρίχνεις τον μαϊντανό και τον άνηθο ψιλοκομμένα.\n7. Προσθέτεις το χυμό ενός λεμονιού.\n8. Αλατοπιπερώνεις και ανακατεύεις.\n9. Σβήνεις τη φωτιά και αφήνεις να κρυώσει λίγο.\n\nΤΥΛΙΓΜΑ:\n10. Απλώνεις ένα φύλλο με τη ματ πλευρά προς τα πάνω.\n11. Κόβεις το μίσχο αν υπάρχει.\n12. Τοποθετείς 1 κουταλάκι γέμιση στη βάση του φύλλου.\n13. Διπλώνεις τις δύο άκρες προς τα μέσα.\n14. Τυλίγεις σφιχτά από κάτω προς τα πάνω σαν ρολό (όχι πολύ σφιχτά γιατί θα σκάσουν).\n\nΒΡΑΣΙΜΟ:\n15. Στρώνεις στον πάτο της κατσαρόλας 2-3 φύλλα ή φέτες ντομάτας φαρδιάς κατσαρόλας (προστατεύουν τα ντολμαδάκια).\n16. Τοποθέτησε τα ντολμαδάκια σφιχτά το ένα δίπλα στο άλλο σε στρώματα.\n17. Ρίξε το υπόλοιπο ελαιόλαδο και το χυμό του δεύτερου λεμονιού από πάνω.\n18. Πρόσθεσε νερό μέχρι να τα καλύψει ελάχιστα.\n19. Τοποθέτησε ένα πιάτο ανάποδα από πάνω για να μην ανοίξουν κατά το βράσιμο.\n20. Βράσε σε χαμηλή φωτιά για 40-45 λεπτά μέχρι το ρύζι να μαλακώσει.\n21. Άφησε να κρυώσουν στο ζωμό τους.\n\nΣΕΡΒΙΡΙΣΜΑ:\n22. Σερβίρονται κρύα με γιαούρτι ή λεμόνι.\n23. Διατηρούνται στο ψυγείο για 4-5 μέρες."`
+      }
+    ];
+
+    let currentFilter = 'all';
+
+    function filterRecipes(category) {
+      currentFilter = category;
+      const buttons = document.querySelectorAll('nav button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const filteredRecipes = category === 'all' 
+        ? recipes 
+        : recipes.filter(r => r.cat === category);
+
+      displayRecipes(filteredRecipes);
+    }
+
+    function displayRecipes(recipesToShow) {
+      const grid = document.getElementById('recipeGrid');
+      grid.innerHTML = recipesToShow.map((recipe, index) => `
+        <div class="recipe-card" onclick="openModal(${recipes.indexOf(recipe)})">
+          <img src="${recipe.img}" alt="${recipe.title}">
+          <div class="recipe-card-body">
+            <h3>${recipe.title}</h3>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openModal(index) {
+      const recipe = recipes[index];
+      document.getElementById('modalImg').src = recipe.img;
+      document.getElementById('modalTitle').textContent = recipe.title;
+      document.getElementById('modalIngredients').innerHTML = recipe.ing
+        .map(ing => `<li>${ing}</li>`).join('');
+      document.getElementById('modalSteps').textContent = recipe.steps;
+      document.getElementById('recipeModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('recipeModal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('recipeModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+
+    // Initialize
+    displayRecipes(recipes);
+  </script>
+</body>
+</html>
