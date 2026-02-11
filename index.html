@@ -1430,6 +1430,17 @@
 
   // ========== ΑΡΧΙΚΗ ΦΟΡΤΩΣΗ ==========
   render();
-  </script>
+  </script> 
+  
+  <script>
+  // Έλεγχος αν η αποστολή ήταν επιτυχής
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('success') === 'true') {
+  alert('Ευχαριστούμε! Το μήνυμά σας στάλθηκε επιτυχώς!');
+  // Καθαρισμός του URL
+  window.history.replaceState({}, document.title, window.location.pathname);
+}
+</script>
+  
 </body>
 </html>
